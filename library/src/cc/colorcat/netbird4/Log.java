@@ -5,6 +5,7 @@ package cc.colorcat.netbird4;
  * xx.ch@outlook.com
  */
 final class Log {
+    static Level threshold = Level.NOTHING;
 
     static void e(Throwable throwable) {
 
