@@ -10,7 +10,7 @@ public final class NameAndValue {
     public final String name;
     public final String value;
 
-    public NameAndValue(String name, String value) {
+    NameAndValue(String name, String value) {
         this.name = name;
         this.value = value;
     }

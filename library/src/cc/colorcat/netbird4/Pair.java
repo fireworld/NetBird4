@@ -7,9 +7,11 @@ import java.util.*;
  * xx.ch@outlook.com
  */
 class Pair implements PairReader {
-    protected List<String> names;
-    protected List<String> values;
-    protected Comparator<String> comparator;
+    static final Pair EMPTY = new Pair(Collections.<String>emptyList(), Collections.<String>emptyList(), String.CASE_INSENSITIVE_ORDER);
+
+    final List<String> names;
+    final List<String> values;
+    final Comparator<String> comparator;
 
     Pair(List<String> names, List<String> values, Comparator<String> comparator) {
         this.names = names;
@@ -48,17 +50,17 @@ class Pair implements PairReader {
     }
 
     @Override
-    public String name(int index) {
+    public final String name(int index) {
         return names.get(index);
     }
 
     @Override
-    public String value(int index) {
+    public final String value(int index) {
         return values.get(index);
     }
 
     @Override
-    public String value(String name) {
+    public final String value(String name) {
         for (int i = 0, size = names.size(); i < size; ++i) {
             if (equal(name, names.get(i))) {
                 return values.get(i);
@@ -68,12 +70,12 @@ class Pair implements PairReader {
     }
 
     @Override
-    public String value(String name, String defaultValue) {
+    public final String value(String name, String defaultValue) {
         return Utils.nullElse(value(name), defaultValue);
     }
 
     @Override
-    public List<String> values(String name) {
+    public final List<String> values(String name) {
         List<String> result = null;
         for (int i = 0, size = names.size(); i < size; ++i) {
             if (equal(name, names.get(i))) {
@@ -85,7 +87,7 @@ class Pair implements PairReader {
     }
 
     @Override
-    public Set<String> nameSet() {
+    public final Set<String> nameSet() {
         if (names.isEmpty()) return Collections.emptySet();
         Set<String> result = new TreeSet<>(comparator);
         result.addAll(names);
@@ -93,7 +95,7 @@ class Pair implements PairReader {
     }
 
     @Override
-    public Map<String, List<String>> toMultimap() {
+    public final Map<String, List<String>> toMultimap() {
         if (names.isEmpty()) return Collections.emptyMap();
         Map<String, List<String>> result = new HashMap<>();
         for (String name : nameSet()) {
@@ -104,10 +106,75 @@ class Pair implements PairReader {
 
     @Override
     public Iterator<NameAndValue> iterator() {
-        return null;
+        return new PairIterator();
     }
 
-    protected final boolean equal(String str1, String str2) {
+    final boolean equal(String str1, String str2) {
         return comparator.compare(str1, str2) == 0;
+    }
+
+    final String contentToString(String separator) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0, size = names.size(); i < size; ++i) {
+            if (i > 0) builder.append(separator);
+            builder.append(names.get(i)).append('=').append(values.get(i));
+        }
+        return builder.toString();
+    }
+
+    final MutablePair toMutablePair() {
+        return new MutablePair(names, values, comparator);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair pair = (Pair) o;
+        return Objects.equals(names, pair.names) &&
+                Objects.equals(values, pair.values) &&
+                Objects.equals(comparator, pair.comparator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(names, values, comparator);
+    }
+
+    @Override
+    public final String toString() {
+        return getClass().getSimpleName() + '{' + contentToString(", ") + '}';
+    }
+
+
+    class PairIterator implements Iterator<NameAndValue> {
+        final Iterator<String> namesItr = names.iterator();
+        final Iterator<String> valuesItr = values.iterator();
+
+        @Override
+        public final boolean hasNext() {
+            boolean result = namesItr.hasNext() && valuesItr.hasNext();
+            checkSize(names, values);
+            return result;
+        }
+
+        @Override
+        public final NameAndValue next() {
+            NameAndValue result = new NameAndValue(namesItr.next(), valuesItr.next());
+            checkSize(names, values);
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("remove");
+        }
+    }
+
+    static void checkSize(List<String> names, List<String> values) {
+        int ns = names.size(), vs = values.size();
+        if (ns != vs) {
+            throw new IllegalArgumentException("names.size(" + ns + ") != values.size(" + vs + ')');
+        }
     }
 }
