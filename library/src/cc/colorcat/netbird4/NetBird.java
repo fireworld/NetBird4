@@ -12,23 +12,23 @@ import java.util.concurrent.ExecutorService;
  * Created by cxx on 18-1-25.
  * xx.ch@outlook.com
  */
-public final class NetBird {
+public final class NetBird implements Call.Factory {
     private final Platform platform;
-    public final String baseUrl;
+    final String baseUrl;
     final List<Interceptor> headInterceptors;
     final List<Interceptor> tailInterceptors;
-    private final ExecutorService executor;
-    private final Dispatcher dispatcher;
-    private final Connection connection;
-    public final Proxy proxy;
-    public final SSLSocketFactory sslSocketFactory;
-    public final HostnameVerifier hostnameVerifier;
-    public final long cacheSize;
-    public final File cachePath;
-    public final int maxRunning;
-    public final int readTimeOut;
-    public final int connectTimeOut;
-    public final boolean gzipEnabled;
+    final ExecutorService executor;
+    final Dispatcher dispatcher;
+    final Connection connection;
+    final Proxy proxy;
+    final SSLSocketFactory sslSocketFactory;
+    final HostnameVerifier hostnameVerifier;
+    final long cacheSize;
+    final File cachePath;
+    final int maxRunning;
+    final int readTimeOut;
+    final int connectTimeOut;
+    final boolean gzipEnabled;
 
     private NetBird(Builder builder) {
         this.platform = builder.platform;
@@ -51,6 +51,63 @@ public final class NetBird {
         dispatcher.setExecutor(this.executor);
         dispatcher.setMaxRunning(this.maxRunning);
         Log.threshold = builder.logLevel;
+    }
+
+    @Override
+    public Call newCall(Request request) {
+        return null;
+    }
+
+    public String baseUrl() {
+        return baseUrl;
+    }
+
+    public List<Interceptor> headInterceptors() {
+        return headInterceptors;
+    }
+
+    public List<Interceptor> tailInterceptors() {
+        return tailInterceptors;
+    }
+
+    public Connection connection() {
+        return connection.clone();
+    }
+
+    public Proxy proxy() {
+        return proxy;
+    }
+
+    public SSLSocketFactory sslSocketFactory() {
+        return sslSocketFactory;
+    }
+
+    public HostnameVerifier hostnameVerifier() {
+        return hostnameVerifier;
+    }
+
+    public long cacheSize() {
+        return cacheSize;
+    }
+
+    public File cachePath() {
+        return cachePath;
+    }
+
+    public int maxRunning() {
+        return maxRunning;
+    }
+
+    public int readTimeOut() {
+        return readTimeOut;
+    }
+
+    public int connectTimeOut() {
+        return connectTimeOut;
+    }
+
+    public boolean gzipEnabled() {
+        return gzipEnabled;
     }
 
     public Builder newBuilder() {

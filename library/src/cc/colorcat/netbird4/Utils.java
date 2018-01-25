@@ -147,4 +147,25 @@ final class Utils {
         }
         return url;
     }
+
+    static String justRead(Reader reader) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        BufferedReader br = new BufferedReader(reader);
+        char[] buffer = new char[2048];
+        for (int length = br.read(buffer); length != -1; length = br.read(buffer)) {
+            builder.append(buffer, 0, length);
+        }
+        return builder.toString();
+    }
+
+    static byte[] justRead(InputStream input) throws IOException {
+        BufferedInputStream bis = buffered(input);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        for (int length = bis.read(buffer); length != -1; length = bis.read(buffer)) {
+            bos.write(buffer, 0, length);
+        }
+        bos.flush();
+        return bos.toByteArray();
+    }
 }

@@ -10,15 +10,15 @@ import java.util.Objects;
  * xx.ch@outlook.com
  */
 public class Request {
-    public final String url;
-    public final String path;
-    public final Method method;
-    public final Parameters parameters;
-    private final List<FileBody> fileBodies;
-    public final Headers headers;
-    public final DownloadListener downloadListener;
-    private final String boundary;
-    public final Object tag;
+    final String url;
+    final String path;
+    final Method method;
+    final Parameters parameters;
+    final List<FileBody> fileBodies;
+    final Headers headers;
+    final DownloadListener downloadListener;
+    final String boundary;
+    final Object tag;
     private RequestBody requestBody;
 
     private boolean freeze = false;
@@ -35,9 +35,39 @@ public class Request {
         this.tag = builder.tag;
     }
 
-    public Builder newBuilder() {
-        if (freeze) throw new IllegalStateException("The request has been frozen, call isFreeze() to check.");
-        return new Builder(this);
+    public final String url() {
+        return url;
+    }
+
+    public final String path() {
+        return path;
+    }
+
+    public final Method method() {
+        return method;
+    }
+
+    public final Parameters parameters() {
+        return parameters;
+    }
+
+    public final Headers headers() {
+        return headers;
+    }
+
+    public final DownloadListener downloadListener() {
+        return downloadListener;
+    }
+
+    public final Object tag() {
+        return tag;
+    }
+
+    final RequestBody requestBody() {
+        if (requestBody == null) {
+            requestBody = Utils.buildRequestBody(parameters, fileBodies, boundary);
+        }
+        return requestBody;
     }
 
     public final boolean isFreeze() {
@@ -54,12 +84,11 @@ public class Request {
         return this;
     }
 
-    final RequestBody requestBody() {
-        if (requestBody == null) {
-            requestBody = Utils.buildRequestBody(parameters, fileBodies, boundary);
-        }
-        return requestBody;
+    public Builder newBuilder() {
+        if (freeze) throw new IllegalStateException("The request has been frozen, call isFreeze() to check.");
+        return new Builder(this);
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -330,7 +359,7 @@ public class Request {
             return this;
         }
 
-        public Builder replaceHeader(Headers headers) {
+        public Builder replaceHeaders(Headers headers) {
             this.headers.clear();
             this.headers.addAll(headers.names(), headers.values());
             return this;
