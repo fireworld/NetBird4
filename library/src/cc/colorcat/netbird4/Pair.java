@@ -123,7 +123,7 @@ class Pair implements PairReader {
     }
 
     final MutablePair toMutablePair() {
-        return new MutablePair(names, values, comparator);
+        return new MutablePair(new ArrayList<>(names), new ArrayList<>(values), comparator);
     }
 
     @Override

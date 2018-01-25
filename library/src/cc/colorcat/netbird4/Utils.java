@@ -1,5 +1,8 @@
 package cc.colorcat.netbird4;
 
+import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,5 +70,81 @@ final class Utils {
             }
         }
         return defaultValue;
+    }
+
+    static void justDump(InputStream input, OutputStream output) throws IOException {
+        BufferedInputStream bis = buffered(input);
+        BufferedOutputStream bos = buffered(output);
+        byte[] buffer = new byte[2048];
+        for (int length = bis.read(buffer); length != -1; length = bis.read(buffer)) {
+            bos.write(buffer, 0, length);
+        }
+        bos.flush();
+    }
+
+    static BufferedInputStream buffered(InputStream input) {
+        return input instanceof BufferedInputStream ? (BufferedInputStream) input : new BufferedInputStream(input);
+    }
+
+    static BufferedOutputStream buffered(OutputStream output) {
+        return output instanceof BufferedOutputStream ? (BufferedOutputStream) output : new BufferedOutputStream(output);
+    }
+
+    static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                Log.e(e);
+            }
+        }
+    }
+
+    static String smartEncode(String value) {
+        try {
+            String decodedValue = decode(value);
+            if (!value.equals(decodedValue)) {
+                return value;
+            }
+        } catch (Exception e) {
+            Log.e(e);
+        }
+        return encode(value);
+    }
+
+    private static String encode(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String decode(String value) {
+        try {
+            return URLDecoder.decode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static RequestBody buildRequestBody(Parameters parameters, List<FileBody> fileBodies, String boundary) {
+        if (parameters.isEmpty() && fileBodies.isEmpty()) {
+            return null;
+        }
+        if (parameters.isEmpty() && fileBodies.size() == 1) {
+            return fileBodies.get(0);
+        }
+        if (!parameters.isEmpty() && fileBodies.isEmpty()) {
+            return FormBody.create(parameters, true);
+        }
+        return MultipartBody.create(FormBody.create(parameters, false), fileBodies, boundary);
+    }
+
+    static String checkedUrl(String url) {
+        if (!url.toLowerCase().matches("^(http)(s)?://(\\S)+")) {
+            throw new IllegalArgumentException("Bad url = " + url + ", the scheme must be http or https");
+        }
+        return url;
     }
 }

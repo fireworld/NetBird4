@@ -1,9 +1,6 @@
 package cc.colorcat.netbird4;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by cxx on 18-1-24.
@@ -62,7 +59,7 @@ final class MutablePair extends Pair implements PairWriter {
     }
 
     final Pair toPair() {
-        return new Pair(names, values, comparator);
+        return new Pair(new ArrayList<>(names), new ArrayList<>(values), comparator);
     }
 
     @Override
