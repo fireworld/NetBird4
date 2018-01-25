@@ -42,7 +42,7 @@ final class Utils {
         try {
             return Long.parseLong(number);
         } catch (Exception e) {
-            // TODO: 18-1-25
+            Log.e(e);
         }
         return defaultValue;
     }
