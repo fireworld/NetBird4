@@ -365,7 +365,7 @@ public class Request {
             return this;
         }
 
-        public Builder addHeader(Headers headers) {
+        public Builder addHeaders(Headers headers) {
             this.headers.addAll(headers.names(), headers.values());
             return this;
         }
@@ -380,7 +380,7 @@ public class Request {
             return this;
         }
 
-        public Builder addAllHeader(List<String> names, List<String> values) {
+        public Builder addHeaders(List<String> names, List<String> values) {
             this.headers.addAll(names, values);
             return this;
         }

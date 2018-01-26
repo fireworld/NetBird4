@@ -1,5 +1,7 @@
 package cc.colorcat.netbird4;
 
+import java.util.List;
+
 /**
  * Created by cxx on 18-1-25.
  * xx.ch@outlook.com
@@ -63,18 +65,28 @@ public final class Response {
             return this;
         }
 
-        public Builder replaceHeaders(Headers headers) {
+        public Builder headers(Headers headers) {
             this.headers = headers.toMutableHeaders();
-            return this;
-        }
-
-        public Builder addHeader(Headers headers) {
-            this.headers.addAll(headers.names(), headers.values());
             return this;
         }
 
         public Builder addHeader(String name, String value) {
             this.headers.add(name, value);
+            return this;
+        }
+
+        public Builder addHeaderIfNot(String name, String value) {
+            this.headers.addIfNot(name, value);
+            return this;
+        }
+
+        public Builder addHeaders(List<String> names, List<String> values) {
+            this.headers.addAll(names, values);
+            return this;
+        }
+
+        public Builder setHeader(String name, String value) {
+            this.headers.set(name, value);
             return this;
         }
 
