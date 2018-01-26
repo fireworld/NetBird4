@@ -243,7 +243,7 @@ public final class MRequest<T> extends Request {
 
         @Override
         public Builder<T> addFile(String name, String contentType, File file, UploadListener listener) {
-            super.addFile(name, contentType, file, listener);
+            super.addFile(name, contentType, file, MUploadListener.wrap(listener));
             return this;
         }
 
@@ -303,7 +303,7 @@ public final class MRequest<T> extends Request {
 
         @Override
         public Builder<T> downloadListener(DownloadListener listener) {
-            super.downloadListener(listener);
+            super.downloadListener(MDownloadListener.wrap(listener));
             return this;
         }
 
