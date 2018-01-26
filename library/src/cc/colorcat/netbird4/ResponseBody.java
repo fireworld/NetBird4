@@ -9,13 +9,13 @@ import java.nio.charset.Charset;
  */
 public abstract class ResponseBody implements Closeable {
 
-    abstract String contentType();
+    public abstract String contentType();
 
-    abstract long contentLength();
+    public abstract long contentLength();
 
-    abstract Charset charset();
+    public abstract Charset charset();
 
-    abstract InputStream stream();
+    public abstract InputStream stream();
 
     public final Reader reader() {
         final Charset charset = charset();
@@ -83,22 +83,22 @@ public abstract class ResponseBody implements Closeable {
         if (contentLength < -1L) throw new IllegalArgumentException("contentLength < -1L");
         return new ResponseBody() {
             @Override
-            String contentType() {
+            public String contentType() {
                 return contentType;
             }
 
             @Override
-            long contentLength() {
+            public long contentLength() {
                 return contentLength;
             }
 
             @Override
-            Charset charset() {
+            public Charset charset() {
                 return charset != null ? charset : Utils.parseCharset(contentType, null);
             }
 
             @Override
-            InputStream stream() {
+            public InputStream stream() {
                 return input;
             }
         };
@@ -109,22 +109,22 @@ public abstract class ResponseBody implements Closeable {
         if (headers == null) throw new IllegalArgumentException("headers = null");
         return new ResponseBody() {
             @Override
-            String contentType() {
+            public String contentType() {
                 return headers.contentType();
             }
 
             @Override
-            long contentLength() {
+            public long contentLength() {
                 return headers.contentLength();
             }
 
             @Override
-            Charset charset() {
+            public Charset charset() {
                 return headers.charset();
             }
 
             @Override
-            InputStream stream() {
+            public InputStream stream() {
                 return input;
             }
         };
