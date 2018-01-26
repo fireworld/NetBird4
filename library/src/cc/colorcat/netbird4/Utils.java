@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cxx on 18-1-24.
@@ -22,6 +26,10 @@ final class Utils {
 
     static <T> T nullElse(T value, T other) {
         return value != null ? value : other;
+    }
+
+    static <T extends CharSequence> T emptyElse(T value, T other) {
+        return isEmpty(value) ? other : value;
     }
 
     static <K, V> Entry<List<K>, List<V>> unzipWithIgnoreNull(Map<K, List<V>> multimap) {
@@ -167,5 +175,26 @@ final class Utils {
         }
         bos.flush();
         return bos.toByteArray();
+    }
+
+    static ExecutorService defaultService(int corePoolSize) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                corePoolSize,
+                10,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingDeque<Runnable>(),
+                new ThreadPoolExecutor.DiscardOldestPolicy()
+        );
+        executor.allowCoreThreadTimeOut(true);
+        return executor;
+    }
+
+    static boolean isTargetThread() {
+        return Platform.get().scheduler().isTargetThread();
+    }
+
+    static void onTargetThread(Runnable runnable) {
+        Platform.get().scheduler().onTargetThread(runnable);
     }
 }

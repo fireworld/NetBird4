@@ -21,7 +21,7 @@ public interface Connection extends Closeable, Cloneable {
 
     Headers responseHeaders() throws IOException;
 
-    ResponseBody responseBody() throws IOException;
+    ResponseBody responseBody(Headers headers) throws IOException;
 
     void cancel();
 

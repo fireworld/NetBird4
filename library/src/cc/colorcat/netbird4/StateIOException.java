@@ -7,7 +7,7 @@ import java.io.IOException;
  * xx.ch@outlook.com
  */
 public final class StateIOException extends IOException {
-    private int state;
+    int state;
 
     public StateIOException(int state, String message) {
         super(message);

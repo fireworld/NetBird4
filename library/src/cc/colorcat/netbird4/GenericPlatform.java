@@ -5,21 +5,22 @@ package cc.colorcat.netbird4;
  * xx.ch@outlook.com
  */
 public final class GenericPlatform extends Platform {
+    private final Connection conn = new HttpConnection();
+    private final Scheduler scheduler = new GenericScheduler();
+    private final Logger logger = new GenericLogger();
+
     @Override
-    Connection connection() {
-        // TODO: 18-1-25  
-        return null;
+    public Connection connection() {
+        return conn;
     }
 
     @Override
-    Scheduler scheduler() {
-        // TODO: 18-1-25  
-        return null;
+    public Scheduler scheduler() {
+        return scheduler;
     }
 
     @Override
-    Logger logger() {
-        // TODO: 18-1-25  
-        return null;
+    public Logger logger() {
+        return logger;
     }
 }

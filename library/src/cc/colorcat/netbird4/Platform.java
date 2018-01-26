@@ -22,9 +22,9 @@ public abstract class Platform {
         return new GenericPlatform();
     }
 
-    abstract Connection connection();
+    public abstract Connection connection();
 
-    abstract Scheduler scheduler();
+    public abstract Scheduler scheduler();
 
-    abstract Logger logger();
+    public abstract Logger logger();
 }

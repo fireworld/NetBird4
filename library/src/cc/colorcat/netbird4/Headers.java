@@ -30,7 +30,7 @@ public class Headers implements PairReader {
         return new Headers(new Pair(entry.first, entry.second, String.CASE_INSENSITIVE_ORDER));
     }
 
-    private static final Headers EMPTY = new Headers(Pair.EMPTY);
+    static final Headers EMPTY = new Headers(Pair.EMPTY);
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_LENGTH = "Content-Length";
 

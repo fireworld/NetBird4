@@ -3,6 +3,7 @@ package cc.colorcat.netbird4;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
+import java.io.IOException;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,36 @@ public final class NetBird implements Call.Factory {
 
     @Override
     public Call newCall(Request request) {
+        return new RealCall(this, request);
+    }
+
+    public <T> T execute(MRequest<T> request) throws IOException {
+        final Response response = newCall(request).execute();
+        if (response.code == 200 && response.responseBody != null) {
+            return request.parser.parse(response).data;
+        }
         return null;
+    }
+
+    public <T> Object send(MRequest<T> request) {
+        newCall(request).enqueue(new MCallback<>(request.parser, request.listener));
+        return request.tag;
+    }
+
+    public void cancelWaiting(Object tag) {
+        if (tag != null) {
+            dispatcher.cancelWaiting(tag);
+        }
+    }
+
+    public void cancelAll(Object tag) {
+        if (tag != null) {
+            dispatcher.cancelAll(tag);
+        }
+    }
+
+    public void cancelAll() {
+        dispatcher.cancelAll();
     }
 
     public String baseUrl() {
@@ -212,6 +242,73 @@ public final class NetBird implements Call.Factory {
             if (connection == null) throw new IllegalArgumentException("connection == null");
             this.connection = connection;
             return this;
+        }
+
+        public Builder proxy(Proxy proxy) {
+            this.proxy = proxy;
+            return this;
+        }
+
+        public Builder sslSocketFactory(SSLSocketFactory sslSocketFactory) {
+            this.sslSocketFactory = sslSocketFactory;
+            return this;
+        }
+
+        public Builder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+            this.hostnameVerifier = hostnameVerifier;
+            return this;
+        }
+
+        public Builder cache(File cachePath, long cacheSize) {
+            if (!cachePath.exists()) {
+                throw new IllegalArgumentException(cachePath.getAbsolutePath() + " is not exists");
+            }
+            if (cacheSize <= 0L) {
+                throw new IllegalArgumentException("cacheSize(" + cacheSize + ") <= 0L");
+            }
+            this.cachePath = cachePath;
+            this.cacheSize = cacheSize;
+            return this;
+        }
+
+        public Builder maxRunning(int maxRunning) {
+            if (maxRunning < 1) {
+                throw new IllegalArgumentException("maxRunning(" + maxRunning + ") < 1");
+            }
+            this.maxRunning = maxRunning;
+            return this;
+        }
+
+        public Builder readTimeOut(int milliseconds) {
+            if (milliseconds <= 0) {
+                throw new IllegalArgumentException("readTimeOut(" + milliseconds + ") < 0");
+            }
+            this.readTimeOut = milliseconds;
+            return this;
+        }
+
+        public Builder connectTimeOut(int milliseconds) {
+            if (milliseconds <= 0) {
+                throw new IllegalArgumentException("connectTimeOut(" + milliseconds + ") < 0");
+            }
+            this.connectTimeOut = milliseconds;
+            return this;
+        }
+
+        public Builder enableGzip(boolean enabled) {
+            this.gzipEnabled = enabled;
+            return this;
+        }
+
+        public Builder logLevel(Level level) {
+            if (level == null) throw new IllegalArgumentException("level == null");
+            this.logLevel = level;
+            return this;
+        }
+
+        public NetBird build() {
+            if (executor == null) executor = Utils.defaultService(maxRunning);
+            return new NetBird(this);
         }
     }
 }

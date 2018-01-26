@@ -12,7 +12,7 @@ public interface Callback {
 
     void onResponse(Call call, Response response) throws IOException;
 
-    void onFailure(Call call, IOException cause);
+    void onFailure(Call call, StateIOException cause);
 
     void onFinish();
 }

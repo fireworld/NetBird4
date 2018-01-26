@@ -19,6 +19,35 @@ public final class Response {
         this.responseBody = builder.responseBody;
     }
 
+    public int responseCode() {
+        return code;
+    }
+
+    public String responseMsg() {
+        return msg;
+    }
+
+    public Headers headers() {
+        return headers;
+    }
+
+    public String header(String name) {
+        return headers.value(name);
+    }
+
+    public String header(String name, String defaultValue) {
+        return headers.value(name, defaultValue);
+    }
+
+    public ResponseBody responseBody() {
+        return responseBody;
+    }
+
+    public Builder newBuilder() {
+        return new Builder(this);
+    }
+
+
     public static final class Builder {
         private int code;
         private String msg;
@@ -87,6 +116,16 @@ public final class Response {
 
         public Builder setHeader(String name, String value) {
             this.headers.set(name, value);
+            return this;
+        }
+
+        public Builder removeHeader(String name) {
+            this.headers.removeAll(name);
+            return this;
+        }
+
+        public Builder clearHeaders() {
+            this.headers.clear();
             return this;
         }
 
