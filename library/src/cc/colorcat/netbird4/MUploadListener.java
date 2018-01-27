@@ -4,7 +4,7 @@ package cc.colorcat.netbird4;
  * Created by cxx on 18-1-26.
  * xx.ch@outlook.com
  */
-class MUploadListener implements UploadListener {
+final class MUploadListener implements UploadListener {
     static UploadListener wrap(UploadListener listener) {
         return listener != null ? new MUploadListener(listener) : null;
     }

@@ -48,7 +48,7 @@ final class BridgeInterceptor implements Interceptor {
 
         Response response = chain.proceed(builder.build().freeze());
         final DownloadListener listener = builder.downloadListener();
-        ResponseBody responseBody = response.responseBody;
+        final ResponseBody responseBody = response.responseBody;
         if (listener != null && responseBody != null) {
             final long contentLength = responseBody.contentLength();
             if (contentLength > 0L) {

@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
  * Created by cxx on 18-1-25.
  * xx.ch@outlook.com
  */
-class Dispatcher {
+final class Dispatcher {
     private ExecutorService executor;
     private int maxRunning = 6;
     private final Queue<RealCall.AsyncCall> waitingAsyncCalls = new ConcurrentLinkedQueue<>();

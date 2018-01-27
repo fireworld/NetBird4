@@ -27,7 +27,7 @@ final class GzipInterceptor implements Interceptor {
 
         Response response = chain.proceed(builder.build().freeze());
         if (transparentGzip && "gzip".equalsIgnoreCase(response.header("Content-Encoding"))) {
-            ResponseBody body = response.responseBody;
+            final ResponseBody body = response.responseBody;
             if (body != null) {
                 final InputStream newStream = new GZIPInputStream(body.stream());
                 final Response.Builder newBuilder = response.newBuilder()

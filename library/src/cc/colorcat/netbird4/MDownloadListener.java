@@ -4,7 +4,7 @@ package cc.colorcat.netbird4;
  * Created by cxx on 18-1-26.
  * xx.ch@outlook.com
  */
-class MDownloadListener implements DownloadListener {
+final class MDownloadListener implements DownloadListener {
     static DownloadListener wrap(DownloadListener listener) {
         return listener != null ? new MDownloadListener(listener) : null;
     }
