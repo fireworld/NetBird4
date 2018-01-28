@@ -24,7 +24,7 @@ public class HttpConnection implements Connection {
     }
 
     @Override
-    public void connect(NetBird netBird, Request request) throws IOException {
+    public final void connect(NetBird netBird, Request request) throws IOException {
         enableCache(netBird.cachePath, netBird.cacheSize);
         final URL url = new URL(request.url);
         final Proxy proxy = netBird.proxy;
@@ -45,14 +45,14 @@ public class HttpConnection implements Connection {
     }
 
     @Override
-    public void writeHeaders(Headers headers) throws IOException {
+    public final void writeHeaders(Headers headers) throws IOException {
         for (int i = 0, size = headers.size(); i < size; ++i) {
             conn.addRequestProperty(headers.name(i), headers.value(i));
         }
     }
 
     @Override
-    public void writeRequestBody(RequestBody requestBody) throws IOException {
+    public final void writeRequestBody(RequestBody requestBody) throws IOException {
         final long contentLength = requestBody.contentLength();
         if (contentLength > 0L) {
             OutputStream output = null;
@@ -67,22 +67,22 @@ public class HttpConnection implements Connection {
     }
 
     @Override
-    public int responseCode() throws IOException {
+    public final int responseCode() throws IOException {
         return conn.getResponseCode();
     }
 
     @Override
-    public String responseMsg() throws IOException {
+    public final String responseMsg() throws IOException {
         return conn.getResponseMessage();
     }
 
     @Override
-    public Headers responseHeaders() throws IOException {
+    public final Headers responseHeaders() throws IOException {
         return Headers.ofWithIgnoreNull(conn.getHeaderFields());
     }
 
     @Override
-    public ResponseBody responseBody(Headers headers) throws IOException {
+    public final ResponseBody responseBody(Headers headers) throws IOException {
         if (input == null) {
             input = conn.getInputStream();
         }
@@ -90,7 +90,7 @@ public class HttpConnection implements Connection {
     }
 
     @Override
-    public void cancel() {
+    public final void cancel() {
         if (conn != null) {
             conn.disconnect();
         }
@@ -103,7 +103,7 @@ public class HttpConnection implements Connection {
     }
 
     @Override
-    public void close() throws IOException {
+    public final void close() throws IOException {
         Utils.close(input);
         if (conn != null) {
             conn.disconnect();

@@ -24,9 +24,9 @@ final class BridgeInterceptor implements Interceptor {
         if (!Utils.isEmpty(path)) uri = uri.resolve(path);
         String url = uri.toString();
 
-        RequestBody body;
+        final RequestBody body;
         if (!builder.method().needBody()) {
-            String query = concatParameters(builder.names(), builder.values());
+            final String query = concatParameters(builder.names(), builder.values());
             if (query != null) {
                 url = url + '?' + query;
                 builder.clear();

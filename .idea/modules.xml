@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NetBird4.iml" filepath="$PROJECT_DIR$/NetBird4.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netbird-android-support/netbird-android-support.iml" filepath="$PROJECT_DIR$/netbird-android-support/netbird-android-support.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netbird-logging-support/netbird-logging-support.iml" filepath="$PROJECT_DIR$/netbird-logging-support/netbird-logging-support.iml" />
     </modules>
   </component>
 </project>

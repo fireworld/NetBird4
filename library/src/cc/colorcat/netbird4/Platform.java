@@ -19,6 +19,12 @@ public abstract class Platform {
     }
 
     private static Platform findPlatform() {
+        try {
+            Class<?> clazz = Class.forName("cc.colorcat.netbird4.android.AndroidPlatform");
+            return (Platform) clazz.newInstance();
+        } catch (Exception e) {
+            Log.e(e);
+        }
         return new GenericPlatform();
     }
 
