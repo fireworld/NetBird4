@@ -27,6 +27,12 @@ public final class MRequest<T> extends Request {
     }
 
     @Override
+    public MRequest.Builder<T> newBuilder() {
+        if (freeze) throw new IllegalStateException("The request has been frozen, call isFreeze() to check");
+        return new Builder<>(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

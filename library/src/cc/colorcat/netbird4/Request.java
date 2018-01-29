@@ -21,7 +21,7 @@ public class Request {
     final Object tag;
     private RequestBody requestBody;
 
-    private boolean freeze = false;
+    boolean freeze = false;
 
     protected Request(Builder builder) {
         this.url = builder.url;
@@ -49,6 +49,10 @@ public class Request {
 
     public final Parameters parameters() {
         return parameters;
+    }
+
+    public final List<FileBody> fileBodies() {
+        return fileBodies;
     }
 
     public final Headers headers() {

@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="library" />
+    <orderEntry type="module" module-name="netbird-logging-support" />
   </component>
 </module>

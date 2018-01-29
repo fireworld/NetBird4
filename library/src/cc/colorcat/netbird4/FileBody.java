@@ -10,7 +10,7 @@ import java.util.Objects;
  * Created by cxx on 18-1-25.
  * xx.ch@outlook.com
  */
-final class FileBody extends RequestBody {
+public final class FileBody extends RequestBody {
     static FileBody create(String name, String contentType, File file, UploadListener listener) {
         if (name == null) throw new NullPointerException("name == null");
         if (contentType == null) throw new NullPointerException("contentType == null");
