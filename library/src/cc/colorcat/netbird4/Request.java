@@ -93,20 +93,19 @@ public class Request {
         return new Builder(this);
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Request request = (Request) o;
-        return Objects.equals(url, request.url) &&
+        return Objects.equals(boundary, request.boundary) &&
+                Objects.equals(url, request.url) &&
                 Objects.equals(path, request.path) &&
                 method == request.method &&
                 Objects.equals(parameters, request.parameters) &&
                 Objects.equals(fileBodies, request.fileBodies) &&
                 Objects.equals(headers, request.headers) &&
                 Objects.equals(downloadListener, request.downloadListener) &&
-                Objects.equals(boundary, request.boundary) &&
                 Objects.equals(tag, request.tag);
     }
 

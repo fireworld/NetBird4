@@ -50,9 +50,7 @@ public final class MRequest<T> extends Request {
     @Override
     public String toString() {
         return "MRequest{" +
-                "parser=" + parser +
-                ", listener=" + listener +
-                ", url='" + url + '\'' +
+                "url='" + url + '\'' +
                 ", path='" + path + '\'' +
                 ", method=" + method +
                 ", parameters=" + parameters +
@@ -61,6 +59,8 @@ public final class MRequest<T> extends Request {
                 ", downloadListener=" + downloadListener +
                 ", boundary='" + boundary + '\'' +
                 ", tag=" + tag +
+                ", parser=" + parser +
+                ", listener=" + listener +
                 '}';
     }
 

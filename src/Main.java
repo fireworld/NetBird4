@@ -52,29 +52,58 @@ public class Main {
                 .path("/api/teacher")
                 .add("type", String.valueOf(4))
                 .add("num", String.valueOf(30))
-                .listener(new MRequest.Listener<String>() {
-                    @Override
-                    public void onStart() {
-                        log("onStart", Level.VERBOSE);
-                    }
-
-                    @Override
-                    public void onSuccess(String result) {
-                        log(result, Level.INFO);
-                    }
-
-                    @Override
-                    public void onFailure(int code, String msg) {
-                        log("code = " + code + ", msg = " + msg, Level.ERROR);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        log("onFinish", Level.VERBOSE);
-                    }
-                })
+//                .listener(new MRequest.Listener<String>() {
+//                    @Override
+//                    public void onStart() {
+//                        log("onStart", Level.VERBOSE);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String result) {
+//                        log(result, Level.INFO);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int code, String msg) {
+//                        log("code = " + code + ", msg = " + msg, Level.ERROR);
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        log("onFinish", Level.VERBOSE);
+//                    }
+//                })
                 .build();
-        NET_BIRD.send(request);
+        final MRequest<String> req = new MRequest.Builder<>(StringParser.getUtf8())
+                .path("/api/teacher")
+                .add("type", String.valueOf(4))
+                .add("num", String.valueOf(30))
+//                .listener(new MRequest.Listener<String>() {
+//                    @Override
+//                    public void onStart() {
+//                        log("onStart", Level.VERBOSE);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String result) {
+//                        log(result, Level.INFO);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int code, String msg) {
+//                        log("code = " + code + ", msg = " + msg, Level.ERROR);
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        log("onFinish", Level.VERBOSE);
+//                    }
+//                })
+                .build();
+        System.out.println(request.equals(req));
+        System.out.println("request = " + request);
+        System.out.println("req = " + req);
+//        NET_BIRD.send(request);
     }
 
     private static void log(String msg, Level level) {
