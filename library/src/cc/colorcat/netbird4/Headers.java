@@ -121,8 +121,12 @@ public class Headers implements PairReader {
         return delegate.iterator();
     }
 
-    public final String contentToString(String separator) {
-        return delegate.contentToString(separator);
+    public final String contentToString(String nameValueSeparator, String lineSeparator) {
+        return delegate.contentToString(nameValueSeparator, lineSeparator);
+    }
+
+    public final String toMultiLine() {
+        return delegate.contentToString(":", "\n");
     }
 
     public final MutableHeaders toMutableHeaders() {
@@ -144,6 +148,6 @@ public class Headers implements PairReader {
 
     @Override
     public final String toString() {
-        return getClass().getSimpleName() + '{' + delegate.contentToString(", ") + '}';
+        return getClass().getSimpleName() + '{' + delegate.contentToString("=", ", ") + '}';
     }
 }
