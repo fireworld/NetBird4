@@ -83,7 +83,7 @@ public class LoggingTailInterceptor implements Interceptor {
     }
 
     private static String buildString(int count, char c) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(count);
         for (int i = 0; i < count; ++i) {
             builder.append(c);
         }
