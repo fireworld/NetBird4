@@ -337,6 +337,11 @@ public class Request {
             return this;
         }
 
+        public Builder replaceIfExists(String name, String value) {
+            this.parameters.replaceIfExists(name, value);
+            return this;
+        }
+
         public Builder remove(String name) {
             this.parameters.removeAll(name);
             return this;
@@ -390,6 +395,11 @@ public class Request {
 
         public Builder setHeader(String name, String value) {
             this.headers.set(name, value);
+            return this;
+        }
+
+        public Builder replaceHeaderIfExists(String name, String value) {
+            this.headers.replaceIfExists(name, value);
             return this;
         }
 

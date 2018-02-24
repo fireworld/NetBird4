@@ -38,6 +38,13 @@ final class MutablePair extends Pair implements PairWriter {
     }
 
     @Override
+    public void replaceIfExists(String name, String value) {
+        if (contains(name)) {
+            set(name, value);
+        }
+    }
+
+    @Override
     public void removeAll(String name) {
         for (int i = names.size() - 1; i >= 0; --i) {
             if (equal(name, names.get(i))) {
