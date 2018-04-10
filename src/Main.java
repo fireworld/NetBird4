@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
         final MRequest<String> req = new MRequest.Builder<>(StringParser.getUtf8())
-                .path("/api/teacher")
+                .path("api/teacher")
                 .add("type", String.valueOf(4))
                 .add("num", String.valueOf(30))
                 .listener(new MRequest.Listener<String>() {

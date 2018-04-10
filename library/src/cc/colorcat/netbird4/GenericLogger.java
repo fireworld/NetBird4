@@ -16,7 +16,7 @@ final class GenericLogger implements Logger {
         final Formatter formatter = new Formatter() {
             @Override
             public synchronized String format(LogRecord record) {
-                return record.getMessage() + '\n';
+                return String.format("%-7s %s\n", toLevel(record.getLevel()).name(), record.getMessage());
             }
         };
         logger.setUseParentHandlers(false);
@@ -50,5 +50,25 @@ final class GenericLogger implements Logger {
             default:
                 break;
         }
+    }
+
+    private static Level toLevel(java.util.logging.Level level) {
+        final int value = level.intValue();
+        if (value == java.util.logging.Level.FINE.intValue()) {
+            return Level.VERBOSE;
+        }
+        if (value == java.util.logging.Level.CONFIG.intValue()) {
+            return Level.DEBUG;
+        }
+        if (value == java.util.logging.Level.INFO.intValue()) {
+            return Level.INFO;
+        }
+        if (value == java.util.logging.Level.WARNING.intValue()) {
+            return Level.WARN;
+        }
+        if (value == java.util.logging.Level.SEVERE.intValue()) {
+            return Level.ERROR;
+        }
+        throw new IllegalArgumentException("un supported level = " + level);
     }
 }
