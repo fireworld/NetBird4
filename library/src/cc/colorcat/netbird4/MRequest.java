@@ -230,6 +230,12 @@ public final class MRequest<T> extends Request {
         }
 
         @Override
+        public Builder<T> replaceIfExists(String name, String value) {
+            super.replaceIfExists(name, value);
+            return this;
+        }
+
+        @Override
         public Builder<T> remove(String name) {
             super.remove(name);
             return this;
@@ -292,6 +298,12 @@ public final class MRequest<T> extends Request {
         @Override
         public Builder<T> setHeader(String name, String value) {
             super.setHeader(name, value);
+            return this;
+        }
+
+        @Override
+        public Builder<T> replaceHeaderIfExists(String name, String value) {
+            super.replaceHeaderIfExists(name, value);
             return this;
         }
 

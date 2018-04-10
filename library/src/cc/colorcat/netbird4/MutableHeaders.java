@@ -20,6 +20,12 @@ public final class MutableHeaders extends Headers implements PairWriter {
         super(pair);
     }
 
+    public void addLine(String line) {
+        int index = line.indexOf(":");
+        if (index == -1) throw new IllegalArgumentException("Unexpected header: " + line);
+        add(line.substring(0, index).trim(), line.substring(index + 1).trim());
+    }
+
     @Override
     public void add(String name, String value) {
         checkNameAndValue(name, value);
@@ -44,6 +50,12 @@ public final class MutableHeaders extends Headers implements PairWriter {
     public void set(String name, String value) {
         checkNameAndValue(name, value);
         cast().set(name, value);
+    }
+
+    @Override
+    public void replaceIfExists(String name, String value) {
+        checkNameAndValue(name, value);
+        cast().replaceIfExists(name, value);
     }
 
     @Override

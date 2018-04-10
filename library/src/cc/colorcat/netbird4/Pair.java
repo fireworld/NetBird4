@@ -113,11 +113,11 @@ class Pair implements PairReader {
         return comparator.compare(str1, str2) == 0;
     }
 
-    final String contentToString(String separator) {
+    final String contentToString(String nameValueSeparator, String lineSeparator) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0, size = names.size(); i < size; ++i) {
-            if (i > 0) builder.append(separator);
-            builder.append(names.get(i)).append('=').append(values.get(i));
+            if (i > 0) builder.append(lineSeparator);
+            builder.append(names.get(i)).append(nameValueSeparator).append(values.get(i));
         }
         return builder.toString();
     }
@@ -143,7 +143,7 @@ class Pair implements PairReader {
 
     @Override
     public final String toString() {
-        return getClass().getSimpleName() + '{' + contentToString(", ") + '}';
+        return getClass().getSimpleName() + '{' + contentToString("=", ", ") + '}';
     }
 
 

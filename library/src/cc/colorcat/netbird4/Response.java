@@ -119,6 +119,11 @@ public final class Response {
             return this;
         }
 
+        public Builder replaceHeaderIfExists(String name, String value) {
+            this.headers.replaceIfExists(name, value);
+            return this;
+        }
+
         public Builder removeHeader(String name) {
             this.headers.removeAll(name);
             return this;

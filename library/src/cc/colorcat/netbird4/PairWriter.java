@@ -16,6 +16,8 @@ public interface PairWriter extends PairReader {
 
     void set(String name, String value);
 
+    void replaceIfExists(String name, String value);
+
     void removeAll(String name);
 
     void clear();

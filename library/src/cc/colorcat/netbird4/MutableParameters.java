@@ -55,6 +55,12 @@ public final class MutableParameters extends Parameters implements PairWriter {
     }
 
     @Override
+    public void replaceIfExists(String name, String value) {
+        checkNameAndValue(name, value);
+        cast().replaceIfExists(name, value);
+    }
+
+    @Override
     public void removeAll(String name) {
         cast().removeAll(name);
     }
