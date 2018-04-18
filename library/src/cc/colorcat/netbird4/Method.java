@@ -5,16 +5,15 @@ package cc.colorcat.netbird4;
  * xx.ch@outlook.com
  */
 public enum Method {
-    GET, HEAD, TRACE, OPTIONS, POST, PUT, DELETE;
+    GET(false), HEAD(false), TRACE(false), OPTIONS(false), POST(true), PUT(true), DELETE(true);
+
+    Method(boolean needBody) {
+        this.needBody = needBody;
+    }
+
+    private boolean needBody;
 
     public boolean needBody() {
-        switch (this) {
-            case POST:
-            case PUT:
-            case DELETE:
-                return true;
-            default:
-                return false;
-        }
+        return needBody;
     }
 }

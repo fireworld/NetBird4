@@ -54,7 +54,7 @@ final class RealCall implements Call {
         final int size = headInterceptors.size() + tailInterceptors.size() + 3;
         final List<Interceptor> interceptors = new ArrayList<>(size);
         interceptors.addAll(headInterceptors);
-        interceptors.add(new BridgeInterceptor(netBird.baseUrl));
+        interceptors.add(new BridgeInterceptor(netBird.baseUrl, netBird.headerManager));
         interceptors.addAll(tailInterceptors);
         interceptors.add(new GzipInterceptor(netBird.gzipEnabled));
         interceptors.add(new ConnectionInterceptor(netBird));

@@ -21,6 +21,7 @@ public final class NetBird implements Call.Factory {
     final ExecutorService executor;
     final Dispatcher dispatcher;
     final Connection connection;
+    final HeaderManager headerManager;
     final Proxy proxy;
     final SSLSocketFactory sslSocketFactory;
     final HostnameVerifier hostnameVerifier;
@@ -39,6 +40,7 @@ public final class NetBird implements Call.Factory {
         this.executor = builder.executor;
         this.dispatcher = builder.dispatcher;
         this.connection = builder.connection;
+        this.headerManager = builder.headerManager;
         this.proxy = builder.proxy;
         this.sslSocketFactory = builder.sslSocketFactory;
         this.hostnameVerifier = builder.hostnameVerifier;
@@ -104,6 +106,10 @@ public final class NetBird implements Call.Factory {
         return connection.clone();
     }
 
+    public HeaderManager headerManager() {
+        return headerManager;
+    }
+
     public Proxy proxy() {
         return proxy;
     }
@@ -153,6 +159,7 @@ public final class NetBird implements Call.Factory {
         private ExecutorService executor;
         private Dispatcher dispatcher;
         private Connection connection;
+        private HeaderManager headerManager;
         private Proxy proxy;
         private SSLSocketFactory sslSocketFactory;
         private HostnameVerifier hostnameVerifier;
@@ -172,6 +179,7 @@ public final class NetBird implements Call.Factory {
             this.executor = null;
             this.dispatcher = new Dispatcher();
             this.connection = this.platform.connection();
+            this.headerManager = HeaderManager.EMPTY;
             this.proxy = null;
             this.sslSocketFactory = null;
             this.hostnameVerifier = null;
@@ -192,6 +200,7 @@ public final class NetBird implements Call.Factory {
             this.executor = netBird.executor;
             this.dispatcher = netBird.dispatcher;
             this.connection = netBird.connection;
+            this.headerManager = netBird.headerManager;
             this.proxy = netBird.proxy;
             this.sslSocketFactory = netBird.sslSocketFactory;
             this.hostnameVerifier = netBird.hostnameVerifier;
@@ -241,6 +250,12 @@ public final class NetBird implements Call.Factory {
         public Builder connection(Connection connection) {
             if (connection == null) throw new IllegalArgumentException("connection == null");
             this.connection = connection;
+            return this;
+        }
+
+        public Builder headerManager(HeaderManager headerManager) {
+            if (headerManager == null) throw new IllegalArgumentException("headerManager == null");
+            this.headerManager = headerManager;
             return this;
         }
 

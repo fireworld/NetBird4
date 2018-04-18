@@ -11,9 +11,11 @@ import java.util.List;
  */
 final class BridgeInterceptor implements Interceptor {
     private final String baseUrl;
+    private final HeaderManager manager;
 
-    BridgeInterceptor(String baseUrl) {
+    BridgeInterceptor(String baseUrl, HeaderManager manager) {
         this.baseUrl = baseUrl;
+        this.manager = manager;
     }
 
     @Override
@@ -42,11 +44,21 @@ final class BridgeInterceptor implements Interceptor {
                         .removeHeader(Headers.CONTENT_LENGTH);
             }
         }
+        Headers headers = manager.loadForRequest(url);
+        if (!headers.isEmpty()) {
+            for (NameAndValue nv : headers) {
+                builder.addHeaderIfNot(nv.name, nv.value);
+            }
+        }
         builder.url(url).clearPath()
+                .addHeaderIfNot("Host", uri.getHost())
                 .addHeaderIfNot("Connection", "Keep-Alive")
                 .addHeaderIfNot("User-Agent", Version.userAgent());
 
         Response response = chain.proceed(builder.build().freeze());
+        if (manager != HeaderManager.EMPTY) {
+            manager.saveFromResponse(url, response.headers);
+        }
         final DownloadListener listener = builder.downloadListener();
         final ResponseBody responseBody = response.responseBody;
         if (listener != null && responseBody != null) {

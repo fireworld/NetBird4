@@ -16,7 +16,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        final MRequest<String> req = new MRequest.Builder<>(StringParser.getUtf8())
+        MRequest req = createRequest();
+        NET_BIRD.send(req);
+    }
+
+    private static MRequest createRequest() {
+        return new MRequest.Builder<>(StringParser.getUtf8())
                 .path("api/teacher")
                 .add("type", String.valueOf(4))
                 .add("num", String.valueOf(30))
@@ -42,7 +47,6 @@ public class Main {
                     }
                 })
                 .build();
-        NET_BIRD.send(req);
     }
 
     private static void log(String msg, Level level) {
