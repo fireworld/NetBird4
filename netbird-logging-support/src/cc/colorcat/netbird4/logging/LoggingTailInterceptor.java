@@ -5,6 +5,8 @@ import cc.colorcat.netbird4.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by cxx on 2018/1/28.
@@ -15,13 +17,19 @@ public class LoggingTailInterceptor implements Interceptor {
     private static final String LINE = buildString(80, '-');
     private static final String HALF_LINE = buildString(38, '-');
     private final Charset charsetIfAbsent;
-
-    public LoggingTailInterceptor(Charset charsetIfAbsent) {
-        this.charsetIfAbsent = charsetIfAbsent;
-    }
+    private final boolean deUnicode;
 
     public LoggingTailInterceptor() {
-        charsetIfAbsent = Charset.forName("UTF-8");
+        this(Charset.forName("UTF-8"), false);
+    }
+
+    public LoggingTailInterceptor(boolean deUnicode) {
+        this(Charset.forName("UTF-8"), deUnicode);
+    }
+
+    public LoggingTailInterceptor(Charset charsetIfAbsent, boolean deUnicode) {
+        this.charsetIfAbsent = charsetIfAbsent;
+        this.deUnicode = deUnicode;
     }
 
     @Override
@@ -29,57 +37,53 @@ public class LoggingTailInterceptor implements Interceptor {
         final Request request = chain.request();
         Response response = chain.proceed(request);
 
-        synchronized (TAG) {
-            log(HALF_LINE + request.method().name() + HALF_LINE, Level.DEBUG);
-            log("request url = " + request.url(), Level.DEBUG);
-            logPair("request header", request.headers(), Level.DEBUG);
-            if (request.method().needBody()) {
-                logPair("request parameter", request.parameters(), Level.DEBUG);
-                logFile(request.fileBodies(), Level.DEBUG);
-            }
+        final StringBuilder builder = new StringBuilder();
+        builder.append(" \n").append(HALF_LINE).append(request.method().name()).append(HALF_LINE)
+                .append("\nrequest url --> ").append(request.url());
+        appendPair(builder, "request header --> ", request.headers());
 
-            log("response --> " + response.responseCode() + "--" + response.responseMsg(), Level.INFO);
-            logPair("response header", response.headers(), Level.INFO);
-            final ResponseBody body = response.responseBody();
-            if (body != null) {
-                final String contentType = body.contentType();
-                if (contentType != null && contentFilter(contentType)) {
-                    final byte[] bytes = body.bytes();
-                    Charset charset = body.charset();
-                    if (charset == null) charset = charsetIfAbsent;
-                    final String content = new String(bytes, charset);
-                    log("response content --> " + content, Level.INFO);
-                    final ResponseBody newBody = ResponseBody.create(bytes, contentType, charset);
-                    response = response.newBuilder()
-                            .setHeader(Headers.CONTENT_LENGTH, Long.toString(newBody.contentLength()))
-                            .responseBody(newBody)
-                            .build();
-                }
-            }
-            log(LINE, Level.INFO);
-            return response;
+        if (request.method().needBody()) {
+            appendPair(builder, "request parameter --> ", request.parameters());
+            appendFile(builder, "request file --> ", request.fileBodies());
         }
+
+        builder.append("\n\nresponse --> ").append(response.responseCode()).append("--").append(response.responseMsg());
+        appendPair(builder, "response header --> ", response.headers());
+        ResponseBody body = response.responseBody();
+        if (body != null) {
+            final String contentType = body.contentType();
+            if (contentType != null && contentFilter(contentType)) {
+                final byte[] bytes = body.bytes();
+                Charset charset = body.charset();
+                if (charset == null) charset = charsetIfAbsent;
+                final String content = new String(bytes, charset);
+                builder.append("\nresponse content --> ").append(deUnicode ? decode(content) : content);
+                final ResponseBody newBody = ResponseBody.create(bytes, contentType, charset);
+                response = response.newBuilder()
+                        .setHeader(Headers.CONTENT_LENGTH, Long.toString(newBody.contentLength()))
+                        .responseBody(newBody)
+                        .build();
+            }
+        }
+        builder.append('\n').append(LINE);
+        Platform.get().logger().log(TAG, builder.toString(), Level.INFO);
+        return response;
     }
 
     protected boolean contentFilter(String contentType) {
         return contentType.matches(".*(charset|text|html|htm|json|urlencoded)+.*");
     }
 
-    private static void logPair(String type, PairReader reader, Level level) {
+    private static void appendPair(StringBuilder builder, String prefix, PairReader reader) {
         for (NameAndValue nv : reader) {
-            String msg = type + " --> " + nv.name + " = " + nv.value;
-            log(msg, level);
+            builder.append('\n').append(prefix).append(nv.name).append('=').append(nv.value);
         }
     }
 
-    private static void logFile(List<FileBody> fileBodies, Level level) {
-        for (FileBody body : fileBodies) {
-            log("request file --> " + body, level);
+    private static void appendFile(StringBuilder builder, String prefix, List<FileBody> bodies) {
+        for (FileBody body : bodies) {
+            builder.append('\n').append(prefix).append(body.toString());
         }
-    }
-
-    private static void log(String msg, Level level) {
-        Platform.get().logger().log(TAG, msg, level);
     }
 
     private static String buildString(int count, char c) {
@@ -88,5 +92,18 @@ public class LoggingTailInterceptor implements Interceptor {
             builder.append(c);
         }
         return builder.toString();
+    }
+
+    private static String decode(String unicode) {
+        StringBuilder builder = new StringBuilder(unicode.length());
+        Matcher matcher = Pattern.compile("\\\\u[0-9a-fA-F]{4}").matcher(unicode);
+        int last = 0;
+        for (int start, end = 0; matcher.find(end); last = end) {
+            start = matcher.start();
+            end = matcher.end();
+            builder.append(unicode.substring(last, start))
+                    .append((char) Integer.parseInt(unicode.substring(start + 2, end), 16));
+        }
+        return builder.append(unicode.substring(last)).toString();
     }
 }

@@ -9,7 +9,7 @@ public class Main {
     static {
         NET_BIRD = new NetBird.Builder("http://www.imooc.com/")
                 .enableGzip(true)
-                .addTailInterceptor(new LoggingTailInterceptor())
+                .addTailInterceptor(new LoggingTailInterceptor(true))
                 .maxRunning(10)
                 .logLevel(Level.VERBOSE)
                 .build();
